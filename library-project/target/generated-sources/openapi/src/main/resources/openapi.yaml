@@ -1,0 +1,585 @@
+openapi: 3.0.3
+info:
+  description: "API for managing books, members, and book loans"
+  title: Library Management API
+  version: 1.0.0
+servers:
+- description: Local development server
+  url: http://localhost:5008
+paths:
+  /api/v1/books:
+    get:
+      operationId: getAllBooks
+      parameters:
+      - explode: true
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 0
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: size
+        required: false
+        schema:
+          default: 20
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageResponseDTO'
+          description: Success
+      summary: Get all books with pagination
+      x-accepts:
+      - application/json
+    post:
+      operationId: addBook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookDTO'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDTO'
+          description: Book added successfully
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: Invalid input
+      summary: Add a new book
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /api/v1/books/{id}:
+    delete:
+      operationId: removeBook
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "204":
+          description: Book removed successfully
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: Book not found
+      summary: Remove book
+      x-accepts:
+      - application/json
+    get:
+      operationId: getBookById
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDTO'
+          description: Success
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: Book not found
+      summary: Get book by ID
+      x-accepts:
+      - application/json
+    put:
+      operationId: updateBook
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookDTO'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDTO'
+          description: Book updated successfully
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: Book not found
+      summary: Update book
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /api/v1/books/search:
+    post:
+      operationId: searchBooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookSearchRequestDTO'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageResponseDTO'
+          description: Success
+      summary: Search books with filters
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /api/v1/genres:
+    get:
+      operationId: getAllGenres
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/GenreDTO'
+                type: array
+          description: Success
+      summary: Get all genres
+      x-accepts:
+      - application/json
+    post:
+      operationId: createGenre
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenreDTO'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenreDTO'
+          description: Genre created successfully
+      summary: Create a new genre
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /api/v1/members:
+    get:
+      operationId: getAllMembers
+      parameters:
+      - explode: true
+        in: query
+        name: status
+        required: false
+        schema:
+          enum:
+          - ACTIVE
+          - SUSPENDED
+          - EXPIRED
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/MemberDTO'
+                type: array
+          description: Success
+      summary: Get all members
+      x-accepts:
+      - application/json
+    post:
+      operationId: registerMember
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemberDTO'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberDTO'
+          description: Member registered successfully
+      summary: Register new member
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /api/v1/loans:
+    get:
+      operationId: getAllLoans
+      parameters:
+      - explode: true
+        in: query
+        name: status
+        required: false
+        schema:
+          enum:
+          - ISSUED
+          - RETURNED
+          - OVERDUE
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/LoanDTO'
+                type: array
+          description: Success
+      summary: Get all loans
+      x-accepts:
+      - application/json
+    post:
+      operationId: issueLoan
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoanDTO'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanDTO'
+          description: Book issued successfully
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: Invalid input or book not available
+      summary: Issue a book
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /api/v1/loans/{id}/return:
+    post:
+      operationId: returnBook
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanDTO'
+          description: Book returned successfully
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+          description: Loan not found
+      summary: Return a book
+      x-accepts:
+      - application/json
+  /api/v1/loans/overdue:
+    get:
+      operationId: getOverdueLoans
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/LoanDTO'
+                type: array
+          description: Success
+      summary: Get overdue loans
+      x-accepts:
+      - application/json
+components:
+  schemas:
+    BookDTO:
+      example:
+        publishYear: 6424
+        addedDate: 2000-01-23T04:56:07.000+00:00
+        author: author
+        isbn: isbn
+        id: 0
+        updatedDate: 2000-01-23T04:56:07.000+00:00
+        title: title
+        genreIds:
+        - 1
+        - 1
+      properties:
+        id:
+          format: int64
+          type: integer
+        title:
+          maxLength: 200
+          type: string
+        author:
+          maxLength: 100
+          type: string
+        isbn:
+          pattern: "^[0-9-]{13,17}$"
+          type: string
+        publishYear:
+          maximum: 9999
+          minimum: 1000
+          type: integer
+        genreIds:
+          items:
+            format: int64
+            type: integer
+          type: array
+        addedDate:
+          format: date-time
+          type: string
+        updatedDate:
+          format: date-time
+          type: string
+      required:
+      - author
+      - isbn
+      - title
+      type: object
+    GenreDTO:
+      example:
+        name: name
+        description: description
+        id: 0
+      properties:
+        id:
+          format: int64
+          type: integer
+        name:
+          maxLength: 50
+          type: string
+        description:
+          maxLength: 200
+          type: string
+      required:
+      - name
+      type: object
+    MemberDTO:
+      example:
+        firstName: firstName
+        lastName: lastName
+        id: 0
+        email: email
+        membershipDate: 2000-01-23
+        status: ACTIVE
+      properties:
+        id:
+          format: int64
+          type: integer
+        firstName:
+          maxLength: 50
+          type: string
+        lastName:
+          maxLength: 50
+          type: string
+        email:
+          format: email
+          type: string
+        membershipDate:
+          format: date
+          type: string
+        status:
+          enum:
+          - ACTIVE
+          - SUSPENDED
+          - EXPIRED
+          type: string
+      required:
+      - email
+      - firstName
+      - lastName
+      type: object
+    LoanDTO:
+      example:
+        returnDate: 2000-01-23
+        dueDate: 2000-01-23
+        id: 0
+        issueDate: 2000-01-23
+        bookId: 6
+        memberId: 1
+        status: ISSUED
+      properties:
+        id:
+          format: int64
+          type: integer
+        bookId:
+          format: int64
+          type: integer
+        memberId:
+          format: int64
+          type: integer
+        issueDate:
+          format: date
+          type: string
+        dueDate:
+          format: date
+          type: string
+        returnDate:
+          format: date
+          type: string
+        status:
+          enum:
+          - ISSUED
+          - RETURNED
+          - OVERDUE
+          type: string
+      required:
+      - bookId
+      - memberId
+      type: object
+    BookSearchRequestDTO:
+      example:
+        genreId: 0
+        sortDirection: asc
+        searchTerm: searchTerm
+        size: 56
+        author: author
+        sortBy: title
+        availability: true
+        page: 0
+        publishYearFrom: 6
+        publishYearTo: 1
+      properties:
+        searchTerm:
+          type: string
+        genreId:
+          format: int64
+          type: integer
+        author:
+          type: string
+        publishYearFrom:
+          type: integer
+        publishYearTo:
+          type: integer
+        availability:
+          type: boolean
+        sortBy:
+          enum:
+          - title
+          - author
+          - publishYear
+          type: string
+        sortDirection:
+          enum:
+          - asc
+          - desc
+          type: string
+        page:
+          default: 0
+          minimum: 0
+          type: integer
+        size:
+          default: 20
+          maximum: 100
+          minimum: 1
+          type: integer
+      type: object
+    PageResponseDTO:
+      example:
+        pageNumber: 2
+        totalPages: 5
+        pageSize: 7
+        content:
+        - publishYear: 6424
+          addedDate: 2000-01-23T04:56:07.000+00:00
+          author: author
+          isbn: isbn
+          id: 0
+          updatedDate: 2000-01-23T04:56:07.000+00:00
+          title: title
+          genreIds:
+          - 1
+          - 1
+        - publishYear: 6424
+          addedDate: 2000-01-23T04:56:07.000+00:00
+          author: author
+          isbn: isbn
+          id: 0
+          updatedDate: 2000-01-23T04:56:07.000+00:00
+          title: title
+          genreIds:
+          - 1
+          - 1
+        totalElements: 5
+      properties:
+        content:
+          items:
+            $ref: '#/components/schemas/BookDTO'
+          type: array
+        totalElements:
+          format: int64
+          type: integer
+        totalPages:
+          type: integer
+        pageNumber:
+          type: integer
+        pageSize:
+          type: integer
+      type: object
+    ErrorDTO:
+      example:
+        code: code
+        message: message
+        timestamp: 2000-01-23T04:56:07.000+00:00
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        timestamp:
+          format: date-time
+          type: string
+      type: object
