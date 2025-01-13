@@ -4,12 +4,17 @@ info:
   description: API for managing books, members, and book loans
   version: 1.0.0
 servers:
-  - url: http://localhost:5008
+  - url: http://localhost:8080
     description: Local development server
+
+tags:
+  - name: Books
+    x-codegen-name: MyBookApi
 
 components:
   schemas:
-    BookDTO:
+
+    BookResponseDTO:
       type: object
       properties:
         id:
@@ -44,7 +49,33 @@ components:
         - author
         - isbn
 
-    GenreDTO:
+    BookRequestDTO:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 200
+        author:
+          type: string
+          maxLength: 100
+        isbn:
+          type: string
+          pattern: '^[0-9-]{13,17}$'
+        publishYear:
+          type: integer
+          minimum: 1000
+          maximum: 9999
+        genreIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+      required:
+        - title
+        - author
+        - isbn
+
+    GenreResponseDTO:
       type: object
       properties:
         id:
@@ -59,6 +90,17 @@ components:
       required:
         - name
 
+    GenreRequestDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 50
+        description:
+          type: string
+          maxLength: 200
+      required:
+        - name
     MemberDTO:
       type: object
       properties:
@@ -151,7 +193,7 @@ components:
         content:
           type: array
           items:
-            $ref: '#/components/schemas/BookDTO'
+            $ref: '#/components/schemas/BookResponseDTO'
         totalElements:
           type: integer
           format: int64
@@ -176,6 +218,8 @@ components:
 paths:
   /api/v1/books:
     post:
+      tags:
+        - Books
       summary: Add a new book
       operationId: addBook
       requestBody:
@@ -183,14 +227,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BookDTO'
+              $ref: '#/components/schemas/BookRequestDTO'
       responses:
         '201':
           description: Book added successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookDTO'
+                $ref: '#/components/schemas/BookResponseDTO'
         '400':
           description: Invalid input
           content:
@@ -199,6 +243,8 @@ paths:
                 $ref: '#/components/schemas/ErrorDTO'
 
     get:
+      tags:
+        - Books
       summary: Get all books with pagination
       operationId: getAllBooks
       parameters:
@@ -222,6 +268,8 @@ paths:
 
   /api/v1/books/{id}:
     get:
+      tags:
+        - Books
       summary: Get book by ID
       operationId: getBookById
       parameters:
@@ -237,7 +285,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookDTO'
+                $ref: '#/components/schemas/BookResponseDTO'
         '404':
           description: Book not found
           content:
@@ -246,6 +294,8 @@ paths:
                 $ref: '#/components/schemas/ErrorDTO'
 
     put:
+      tags:
+        - Books
       summary: Update book
       operationId: updateBook
       parameters:
@@ -260,14 +310,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BookDTO'
+              $ref: '#/components/schemas/BookRequestDTO'
       responses:
         '200':
           description: Book updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookDTO'
+                $ref: '#/components/schemas/BookResponseDTO'
         '404':
           description: Book not found
           content:
@@ -276,6 +326,8 @@ paths:
                 $ref: '#/components/schemas/ErrorDTO'
 
     delete:
+      tags:
+        - Books
       summary: Remove book
       operationId: removeBook
       parameters:
@@ -297,6 +349,8 @@ paths:
 
   /api/v1/books/search:
     post:
+      tags:
+        - Books
       summary: Search books with filters
       operationId: searchBooks
       requestBody:
@@ -315,6 +369,8 @@ paths:
 
   /api/v1/genres:
     post:
+      tags:
+        - Books
       summary: Create a new genre
       operationId: createGenre
       requestBody:
@@ -322,16 +378,18 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GenreDTO'
+              $ref: '#/components/schemas/GenreRequestDTO'
       responses:
         '201':
           description: Genre created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GenreDTO'
+                $ref: '#/components/schemas/GenreResponseDTO'
 
     get:
+      tags:
+        - Books
       summary: Get all genres
       operationId: getAllGenres
       responses:
@@ -342,10 +400,12 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/GenreDTO'
+                  $ref: '#/components/schemas/GenreResponseDTO'
 
   /api/v1/members:
     post:
+      tags:
+        - Books
       summary: Register new member
       operationId: registerMember
       requestBody:
@@ -363,6 +423,8 @@ paths:
                 $ref: '#/components/schemas/MemberDTO'
 
     get:
+      tags:
+        - Books
       summary: Get all members
       operationId: getAllMembers
       parameters:
@@ -383,6 +445,8 @@ paths:
 
   /api/v1/loans:
     post:
+      tags:
+        - Books
       summary: Issue a book
       operationId: issueLoan
       requestBody:
@@ -406,6 +470,8 @@ paths:
                 $ref: '#/components/schemas/ErrorDTO'
 
     get:
+      tags:
+        - Books
       summary: Get all loans
       operationId: getAllLoans
       parameters:
@@ -426,6 +492,8 @@ paths:
 
   /api/v1/loans/{id}/return:
     post:
+      tags:
+        - Books
       summary: Return a book
       operationId: returnBook
       parameters:
@@ -451,6 +519,8 @@ paths:
 
   /api/v1/loans/overdue:
     get:
+      tags:
+        - Books
       summary: Get overdue loans
       operationId: getOverdueLoans
       responses:
