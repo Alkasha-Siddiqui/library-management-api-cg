@@ -4,7 +4,7 @@ info:
   description: API for managing books, members, and book loans
   version: 1.0.0
 servers:
-  - url: http://localhost:8080
+  - url: http://localhost:5004
     description: Local development server
 
 tags:
@@ -38,10 +38,10 @@ components:
           items:
             type: integer
             format: int64
-        addedDate:
+        addedDateTime:
           type: string
           format: date-time
-        updatedDate:
+        updatedDateTime:
           type: string
           format: date-time
       required:

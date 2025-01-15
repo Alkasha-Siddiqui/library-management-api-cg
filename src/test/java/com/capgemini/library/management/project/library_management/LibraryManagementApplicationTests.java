@@ -1,4 +1,4 @@
-package com.openapi.gen.springboot.library_management;
+package com.capgemini.library.management.project.library_management;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
