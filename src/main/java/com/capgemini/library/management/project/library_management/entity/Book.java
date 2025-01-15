@@ -12,7 +12,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Data
 @Entity
 @Table(name="book")
 public class Book {
@@ -42,48 +42,58 @@ public class Book {
     //@Column(name="updated_date" )
     private OffsetDateTime updatedDateTime;
 
-
     public Integer getId() {
         return id;
     }
+
     public void setId(Integer id) {
         this.id = id;
     }
+
     public String getTitle() {
         return title;
     }
+
     public void setTitle(String title) {
         this.title = title;
     }
+
     public String getAuthor() {
         return author;
     }
+
     public void setAuthor(String author) {
         this.author = author;
     }
+
     public String getIsbn() {
         return isbn;
     }
+
     public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
+
     public Integer getPublishYear() {
         return publishYear;
     }
+
     public void setPublishYear(Integer publishYear) {
         this.publishYear = publishYear;
     }
+
     public List<Long> getGenreIds() {
         return genreIds;
     }
+
     public void setGenreIds(List<Long> genreIds) {
         this.genreIds = genreIds;
     }
+
     public OffsetDateTime getAddedDateTime() {
         return OffsetDateTime.from(addedDateTime);
     }
     public void setAddedDateTime(OffsetDateTime addedDateTime) {
-//        this.addedDateTime = addedDateTime;
         this.addedDateTime = OffsetDateTime.now(ZoneOffset.UTC);
     }
 
@@ -91,37 +101,7 @@ public class Book {
         return OffsetDateTime.from(updatedDateTime);
     }
     public void setUpdatedDateTime(OffsetDateTime updatedDateTime) {
-//        this.updatedDateTime = updatedDateTime;
         this.updatedDateTime = OffsetDateTime.now(ZoneOffset.UTC);
     }
 
-
-    @Override
-    public int hashCode() {
-        return 31;
-    }
-
-
-    @Override
-    public String toString() {
-        return "Book [id=" + id + ", title=" + title +  ", author=" + author + ", isbn=" + isbn
-                + ", publishYear=" + publishYear + ", genreIds=" + genreIds + ", addedDateTime=" + addedDateTime
-                + ", updatedDateTime=" + updatedDateTime + "]";
-    }
-
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Book other = (Book) obj;
-        return Objects.equals(addedDateTime, other.addedDateTime) && Objects.equals(author, other.author)
-                && Objects.equals(id, other.id) && Objects.equals(title, other.title)
-                && Objects.equals(genreIds, other.genreIds) && Objects.equals(isbn, other.isbn)
-                && Objects.equals(publishYear, other.publishYear) && Objects.equals(updatedDateTime, other.updatedDateTime);
-    }
 }
