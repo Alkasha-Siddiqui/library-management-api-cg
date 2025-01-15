@@ -1,10 +1,10 @@
-package com.openapi.gen.springboot.library_management_v1;
+package com.capgemini.library.management.project.library_management;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class LibraryManagementV1ApplicationTests {
+class LibraryManagementApplicationTests {
 
 	@Test
 	void contextLoads() {
