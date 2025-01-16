@@ -1,6 +1,7 @@
 package com.capgemini.library.management.project.library_management.service;
 
 import com.capgemini.library.management.project.library_management.entity.Book;
+import com.capgemini.library.management.project.library_management.exception.DuplicateISBNException;
 import com.capgemini.library.management.project.library_management.exception.ResourceNotFoundException;
 //import com.capgemini.library.management.project.library_management.mapper.BookPopulator;
 import com.capgemini.library.management.project.library_management.model.BookDTO;
@@ -28,6 +29,11 @@ public class BookAllocationServiceImpl implements BookAllocationService {
 
     @Override
     public BookDTO addBook(BookDTO bookDTO) {
+
+        if (bookRepository.existsByIsbn(bookDTO.getIsbn())) {
+            throw new DuplicateISBNException("User", "id", bookDTO.getIsbn());
+        }
+
         Book book = this.dtoToBook(bookDTO);
         Book savedBook = bookRepository.save(book);
         return this.bookToDto(savedBook);

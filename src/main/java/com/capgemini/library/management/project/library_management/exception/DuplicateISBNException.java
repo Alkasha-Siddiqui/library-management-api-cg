@@ -1,8 +1,20 @@
 package com.capgemini.library.management.project.library_management.exception;
 
-public class DuplicateISBNException extends LibraryManagementException {
+import lombok.Getter;
+import lombok.Setter;
 
-    public DuplicateISBNException(String message) {
-        super(message);
+@Getter
+@Setter
+public class DuplicateISBNException extends RuntimeException {
+
+    String resourceName;
+    String fieldName;
+    String fieldValue;
+
+    public DuplicateISBNException(String resourceName, String fieldName, String fieldValue) {
+        super(String.format("%s not found with %s : '%s'", resourceName, fieldName, fieldValue));
+        this.resourceName = resourceName;
+        this.fieldName = fieldName;
+        this.fieldValue = fieldValue;
     }
 }
