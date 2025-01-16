@@ -8,5 +8,7 @@ public interface BookAllocationService {
 
     BookDTO getBookById(Long id);
 
-//    public List<Book> getAllBooks(int page, int size);
+    BookDTO updateBook(Long id, BookDTO bookDTO);
+
+    void removeBook(Long id);
 }

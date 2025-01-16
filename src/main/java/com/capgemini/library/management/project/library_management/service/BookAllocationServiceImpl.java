@@ -45,6 +45,27 @@ public class BookAllocationServiceImpl implements BookAllocationService {
         return this.bookToDto(book);
     }
 
+    @Override
+    public BookDTO updateBook(Long id, BookDTO bookDTO) {
+        Book book = bookRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("User", "id", id));
+
+        book.setTitle(bookDTO.getTitle());
+        book.setAuthor(bookDTO.getAuthor());
+        book.setIsbn(bookDTO.getIsbn());
+        book.setPublishYear(bookDTO.getPublishYear());
+        book.setGenreIds(bookDTO.getGenreIds());
+        book.setUpdatedDateTime(OffsetDateTime.now(ZoneOffset.UTC));
+
+        Book updatedBook = bookRepository.save(book);
+        BookDTO bookDTO1 = this.bookToDto(updatedBook);
+        return bookDTO1;
+    }
+
+    @Override
+    public void removeBook(Long id) {
+        bookRepository.deleteById(id);
+    }
+
 
 //    @Override
 //    public List<Book> getAllBooks(int page, int size) {
