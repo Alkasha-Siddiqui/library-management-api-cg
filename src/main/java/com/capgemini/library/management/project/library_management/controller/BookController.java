@@ -24,35 +24,6 @@ public class BookController implements BooksApi {
     @Autowired
     BookAllocationService bookAllocationService;
 
-
-//    @Override
-//    public ResponseEntity<BookDTO> addBook(@Valid @RequestBody BookDTO bookDTO) {
-//        try {
-//            BookDTO addedBookDTO = bookAllocationService.addBook(bookDTO);
-//            return new ResponseEntity<>(addedBookDTO, HttpStatus.CREATED);
-//        } catch (LibraryManagementException ex) {
-//            if (ex instanceof DuplicateISBNException) {
-//                BookResponseWithErrorsDTO errorResponseDTO = new BookResponseWithErrorsDTO();
-//                ErrorDTO error = new ErrorDTO();
-//                error.setCode("DUPLICATE_ISBN");
-//                error.setMessage("ISBN already exists in the library");
-//                error.setTimestamp(OffsetDateTime.now(ZoneOffset.UTC));
-//                errorResponseDTO.setError(error);
-//                return new ResponseEntity<>(errorResponseDTO, HttpStatus.CONFLICT);
-//            } else {
-//
-//                ex.printStackTrace();
-//                BookResponseWithErrorsDTO errorResponseDTO = new BookResponseWithErrorsDTO();
-//                ErrorDTO error = new ErrorDTO();
-//                error.setCode("INTERNAL_SERVER_ERROR"); // Set appropriate error code
-//                error.setMessage("Internal server error occurred");
-//                error.setTimestamp(OffsetDateTime.now(ZoneOffset.UTC));
-//                errorResponseDTO.setError(error);
-//                return new ResponseEntity<>(errorResponseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
-//            }
-//        }
-//    }
-
     @Override
     public ResponseEntity<BookDTO> addBook(@Valid @RequestBody BookDTO bookDTO) {
         try {
@@ -68,7 +39,6 @@ public class BookController implements BooksApi {
                 return new ResponseEntity<>(errorResponseDTO, HttpStatus.CONFLICT);
             }
         }
-
 
     @Override
     public ResponseEntity<BookDTO> getBookById(@PathVariable Long id) {

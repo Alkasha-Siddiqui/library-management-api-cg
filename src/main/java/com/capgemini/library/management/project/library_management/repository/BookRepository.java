@@ -10,9 +10,9 @@ import java.util.Optional;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Integer> {
 
-    Optional<Book> findByIsbn(String isbn);
-
-    boolean existsByIsbn(String isbn); // Added for efficient duplicate check
-
     Optional<Book> findById(Long id);
+
+//    Optional<Book> findByIsbn(String isbn);
+    boolean existsByIsbn(String isbn);
+
 }
