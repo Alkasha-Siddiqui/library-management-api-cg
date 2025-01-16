@@ -1,26 +1,17 @@
 package com.capgemini.library.management.project.library_management.service;
 
 import com.capgemini.library.management.project.library_management.entity.Book;
-import com.capgemini.library.management.project.library_management.exception.DuplicateISBNException;
-import com.capgemini.library.management.project.library_management.exception.LibraryManagementException;
-import com.capgemini.library.management.project.library_management.mapper.BookPopulator;
+import com.capgemini.library.management.project.library_management.exception.ResourceNotFoundException;
+//import com.capgemini.library.management.project.library_management.mapper.BookPopulator;
 import com.capgemini.library.management.project.library_management.model.BookDTO;
-import com.capgemini.library.management.project.library_management.model.BookDTO;
-import com.capgemini.library.management.project.library_management.model.PageResponseDTO;
 import com.capgemini.library.management.project.library_management.repository.BookRepository;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Service(value = "bookService")
 @Transactional
@@ -36,18 +27,18 @@ public class BookAllocationServiceImpl implements BookAllocationService {
     private ModelMapper modelMapper;
 
     @Override
-    public Integer addBook(BookDTO bookDTO) throws DuplicateISBNException {
-        Optional<Book> optionalBook = bookRepository.findByIsbn(bookDTO.getIsbn());
-
-        if (optionalBook.isPresent()) {
-            throw new DuplicateISBNException("ISBN already exists in the library"); // Use a specific subclass
-        }
-
-        Book book = BookPopulator.INSTANCE.populateBook(bookDTO);
-        book.setAddedDateTime(OffsetDateTime.now(ZoneOffset.UTC));
-        book.setUpdatedDateTime(OffsetDateTime.now(ZoneOffset.UTC));
-        return bookRepository.save(book).getId();
+    public BookDTO addBook(BookDTO bookDTO) {
+        Book book = this.dtoToBook(bookDTO);
+        Book savedBook = bookRepository.save(book);
+        return this.bookToDto(savedBook);
     }
+
+    @Override
+    public BookDTO getBookById(Long id)  {
+        Book book = bookRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("User", "id", id));
+        return this.bookToDto(book);
+    }
+
 
 //    @Override
 //    public List<Book> getAllBooks(int page, int size) {
@@ -61,25 +52,8 @@ public class BookAllocationServiceImpl implements BookAllocationService {
 //        return listOfBooks;
 //    }
 
-    @Override
-    public BookDTO getBookById(Integer id) throws DuplicateISBNException{
-        Optional<Book> optionalBook = bookRepository.findByIsbn(bookDTO.getIsbn());
 
-        if (optionalBook.isPresent()) {
-            throw new DuplicateISBNException("ISBN already exists in the library"); // Use a specific subclass
-        }BookDTO book2 = new BookDTO();
 
-        book2.setTitle(book.getTitle());
-        book2.setAuthor(book.getAuthor());
-        book2.setIsbn(book.getIsbn());
-        book2.setPublishYear(book.getPublishYear());
-        book2.setGenreIds(book.getGenreIds());
-//        book2.setAddedDate(book.getAddedDate());
-//        book2.setUpdatedDate(book.getUpdatedDate());
-
-        return book2;
-    }
-    }
 //    public List<Book> getAllBooks(){
 //        return bookRepository.findAll();
 //    }
@@ -176,5 +150,31 @@ public class BookAllocationServiceImpl implements BookAllocationService {
 //        return null;
 //    }
 
+    public Book dtoToBook(BookDTO bookDTO) {
+        Book book = new Book();
+
+        book.setTitle(bookDTO.getTitle());
+        book.setAuthor(bookDTO.getAuthor());
+        book.setIsbn(bookDTO.getIsbn());
+        book.setPublishYear(bookDTO.getPublishYear());
+        book.setGenreIds(bookDTO.getGenreIds());
+        book.setAddedDateTime(OffsetDateTime.now(ZoneOffset.UTC));
+        book.setUpdatedDateTime(OffsetDateTime.now(ZoneOffset.UTC));
+
+        return book;
+    }
+    public BookDTO bookToDto(Book book) {
+        BookDTO bookDTO = new BookDTO();
+
+        bookDTO.setId(Long.valueOf(book.getId()));
+        bookDTO.setTitle(book.getTitle());
+        bookDTO.setAuthor(book.getAuthor());
+        bookDTO.setIsbn(book.getIsbn());
+        bookDTO.setPublishYear(book.getPublishYear());
+        bookDTO.setGenreIds(book.getGenreIds());
+        bookDTO.setAddedDateTime(book.getAddedDateTime());
+        bookDTO.setUpdatedDateTime(book.getUpdatedDateTime());
+        return bookDTO;
+    }
 
 }

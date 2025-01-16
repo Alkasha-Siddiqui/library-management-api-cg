@@ -1,13 +1,16 @@
 package com.capgemini.library.management.project.library_management.controller;
 
 import com.capgemini.library.management.project.library_management.api.BooksApi;
+import com.capgemini.library.management.project.library_management.entity.Book;
 import com.capgemini.library.management.project.library_management.exception.DuplicateISBNException;
 import com.capgemini.library.management.project.library_management.exception.LibraryManagementException;
+import com.capgemini.library.management.project.library_management.exception.ResourceNotFoundException;
 import com.capgemini.library.management.project.library_management.model.*;
 import com.capgemini.library.management.project.library_management.service.BookAllocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,23 +24,26 @@ public class BookController implements BooksApi {
     @Autowired
     BookAllocationService bookAllocationService;
 
+
+//    @Override
+//    public ResponseEntity<BookDTO> addBook(@Valid @RequestBody BookDTO bookDTO) {
+//
+//        BookDTO addBookDTO = null;
+//        try {
+//            addBookDTO = this.bookAllocationService.addBook(bookDTO);
+//        } catch (DuplicateISBNException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        return new ResponseEntity<>(addBookDTO, HttpStatus.CREATED);
+//
+//    }
+
     @Override
     public ResponseEntity<BookDTO> addBook(@Valid @RequestBody BookDTO bookDTO) {
         try {
-            Integer bookId = bookAllocationService.addBook(bookDTO);
-            BookDTO responseDTO = new BookDTO();
-
-            responseDTO.setId(Long.valueOf(bookId));
-            responseDTO.setTitle(bookDTO.getTitle());
-            responseDTO.setAuthor(bookDTO.getAuthor());
-            responseDTO.setIsbn(bookDTO.getIsbn());
-            responseDTO.setPublishYear(bookDTO.getPublishYear());
-            responseDTO.setGenreIds(bookDTO.getGenreIds());
-//            responseDTO.setAddedDate(OffsetDateTime.now(ZoneOffset.UTC));
-//            responseDTO.setUpdatedDate(OffsetDateTime.now(ZoneOffset.UTC));
-
-            return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
-
+            BookDTO addedBookDTO = bookAllocationService.addBook(bookDTO);
+            return new ResponseEntity<>(addedBookDTO, HttpStatus.CREATED);
         } catch (LibraryManagementException ex) {
             if (ex instanceof DuplicateISBNException) {
                 BookResponseWithErrorsDTO errorResponseDTO = new BookResponseWithErrorsDTO();
@@ -60,38 +66,26 @@ public class BookController implements BooksApi {
                 return new ResponseEntity<>(errorResponseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
-
     }
 
     @Override
-    public ResponseEntity<BookDTO> getBookById(Integer id){
-        BookDTO bookDTO = bookAllocationService.getBookById(id);
+    public ResponseEntity<BookDTO> getBookById(@PathVariable Long id) {
         try {
-            return new ResponseEntity<>(bookDTO, HttpStatus.OK);
-        } catch (LibraryManagementException ex) {
-            if (ex instanceof DuplicateISBNException) {
-                BookResponseWithErrorsDTO errorResponseDTO = new BookResponseWithErrorsDTO();
-                ErrorDTO error = new ErrorDTO();
-                error.setCode("DUPLICATE_ISBN");
-                error.setMessage("ISBN already exists in the library");
-                error.setTimestamp(OffsetDateTime.now(ZoneOffset.UTC));
-                errorResponseDTO.setError(error);
-                return new ResponseEntity<>(errorResponseDTO, HttpStatus.CONFLICT);
-            } else {
-                // Handle other LibraryManagementException types
-                // You can log the exception for further analysis
-                ex.printStackTrace();
-                BookResponseWithErrorsDTO errorResponseDTO = new BookResponseWithErrorsDTO();
-                ErrorDTO error = new ErrorDTO();
-                error.setCode("INTERNAL_SERVER_ERROR"); // Set appropriate error code
-                error.setMessage("Internal server error occurred");
-                error.setTimestamp(OffsetDateTime.now(ZoneOffset.UTC));
-                errorResponseDTO.setError(error);
-                return new ResponseEntity<>(errorResponseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+            BookDTO bookDTO = bookAllocationService.getBookById(id);
+            return ResponseEntity.ok(bookDTO);
+        } catch (ResourceNotFoundException ex) {
+            BookResponseWithErrorsDTO errorResponseDTO = new BookResponseWithErrorsDTO();
+            ErrorDTO error = new ErrorDTO();
+            error.setCode("RESOURCE_NOT_FOUND"); // Use appropriate error code
+            error.setMessage("Book not found with ID: " + id);
+            error.setTimestamp(OffsetDateTime.now(ZoneOffset.UTC));
+            errorResponseDTO.setError(error);
+            return new ResponseEntity<>(errorResponseDTO, HttpStatus.NOT_FOUND);
+        }
     }
+}
 
-//    @Override
+    //    @Override
 //    public ResponseEntity<PageResponseDTO> getAllBooks(
 //            @RequestParam(defaultValue = "0") Integer page,
 //            @RequestParam(defaultValue = "10") Integer size) {
@@ -118,4 +112,3 @@ public class BookController implements BooksApi {
 //        return new ResponseEntity<>(pageResponse, HttpStatus.OK);
 //    }
 
-}
