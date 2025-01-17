@@ -1,7 +1,6 @@
 package com.capgemini.library.management.project.library_management.repository;
 
 import com.capgemini.library.management.project.library_management.entity.Book;
-//import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

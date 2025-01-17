@@ -1,15 +1,16 @@
 package com.capgemini.library.management.project.library_management.service;
 
 import com.capgemini.library.management.project.library_management.exception.DuplicateISBNException;
-import com.capgemini.library.management.project.library_management.model.BookDTO;
+import com.capgemini.library.management.project.library_management.model.BookRequestDTO;
+import com.capgemini.library.management.project.library_management.model.BookResponseDTO;
 import com.capgemini.library.management.project.library_management.model.PageResponseDTO;
 
 public interface BookAllocationService {
-    BookDTO addBook(BookDTO bookDTO) throws DuplicateISBNException;
+    BookResponseDTO addBook(BookRequestDTO bookResquestDTO) throws DuplicateISBNException;
 
-    BookDTO getBookById(Long id);
+    BookResponseDTO getBookById(Long id);
 
-    BookDTO updateBook(Long id, BookDTO bookDTO);
+    BookResponseDTO updateBook(Long id, BookRequestDTO bookDTO);
 
     void removeBook(Long id);
 

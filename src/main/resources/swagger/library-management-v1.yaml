@@ -14,7 +14,7 @@ tags:
 components:
   schemas:
 
-    BookDTO:
+    BookResponseDTO:
       type: object
       properties:
         id:
@@ -49,7 +49,33 @@ components:
         - author
         - isbn
 
-    GenreDTO:
+    BookRequestDTO:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 200
+        author:
+          type: string
+          maxLength: 100
+        isbn:
+          type: string
+          pattern: '^[0-9-]{13,17}$'
+        publishYear:
+          type: integer
+          minimum: 1000
+          maximum: 9999
+        genreIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+      required:
+        - title
+        - author
+        - isbn
+
+    GenreResponseDTO:
       type: object
       properties:
         id:
@@ -64,6 +90,17 @@ components:
       required:
         - name
 
+    GenreRequestDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 50
+        description:
+          type: string
+          maxLength: 200
+      required:
+        - name
     MemberDTO:
       type: object
       properties:
@@ -156,7 +193,7 @@ components:
         content:
           type: array
           items:
-            $ref: '#/components/schemas/BookDTO'
+            $ref: '#/components/schemas/BookResponseDTO'
         totalElements:
           type: integer
           format: int64
@@ -190,14 +227,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BookDTO'
+              $ref: '#/components/schemas/BookRequestDTO'
       responses:
         '201':
           description: Book added successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookDTO'
+                $ref: '#/components/schemas/BookResponseDTO'
         '400':
           description: Invalid input
           content:
@@ -248,7 +285,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookDTO'
+                $ref: '#/components/schemas/BookResponseDTO'
         '404':
           description: Book not found
           content:
@@ -273,14 +310,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BookDTO'
+              $ref: '#/components/schemas/BookRequestDTO'
       responses:
         '200':
           description: Book updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookDTO'
+                $ref: '#/components/schemas/BookResponseDTO'
         '404':
           description: Book not found
           content:
@@ -341,14 +378,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GenreDTO'
+              $ref: '#/components/schemas/GenreRequestDTO'
       responses:
         '201':
           description: Genre created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GenreDTO'
+                $ref: '#/components/schemas/GenreResponseDTO'
 
     get:
       tags:
@@ -363,7 +400,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/GenreDTO'
+                  $ref: '#/components/schemas/GenreResponseDTO'
 
   /api/v1/members:
     post:

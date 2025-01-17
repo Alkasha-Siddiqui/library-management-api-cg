@@ -3,10 +3,9 @@ package com.capgemini.library.management.project.library_management.entity;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
-import java.util.Objects;
-
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Getter
 @Setter
@@ -37,10 +36,13 @@ public class Book {
     private List<Long> genreIds;
 
     //@Column(name="added_date")
-    private OffsetDateTime addedDateTime;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private OffsetDateTime addedDateTime = OffsetDateTime.now(ZoneOffset.UTC);
+
 
     //@Column(name="updated_date" )
-    private OffsetDateTime updatedDateTime;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private OffsetDateTime updatedDateTime = OffsetDateTime.now(ZoneOffset.UTC);
 
     public Integer getId() {
         return id;

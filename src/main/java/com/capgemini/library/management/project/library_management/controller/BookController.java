@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -31,9 +30,9 @@ public class BookController implements BooksApi {
     private static final Logger log = LoggerFactory.getLogger(BookController.class);
 
     @Override
-    public ResponseEntity<BookDTO> addBook(@Valid @RequestBody BookDTO bookDTO) {
+    public ResponseEntity<BookResponseDTO> addBook(@Valid @RequestBody BookRequestDTO bookDTO) {
         try {
-            BookDTO addedBookDTO = bookAllocationService.addBook(bookDTO);
+            BookResponseDTO addedBookDTO = bookAllocationService.addBook(bookDTO);
             return new ResponseEntity<>(addedBookDTO, HttpStatus.CREATED);
         } catch (DuplicateISBNException ex) {
             BookResponseWithErrorsDTO errorResponseDTO = new BookResponseWithErrorsDTO();
@@ -47,9 +46,9 @@ public class BookController implements BooksApi {
     }
 
     @Override
-    public ResponseEntity<BookDTO> getBookById(@PathVariable Long id) {
+    public ResponseEntity<BookResponseDTO> getBookById(@PathVariable Long id) {
         try {
-            BookDTO bookDTO = this.bookAllocationService.getBookById(id);
+            BookResponseDTO bookDTO = this.bookAllocationService.getBookById(id);
             return ResponseEntity.ok(bookDTO);
         } catch (ResourceNotFoundException ex) {
             BookResponseWithErrorsDTO errorResponseDTO = new BookResponseWithErrorsDTO();
@@ -64,9 +63,9 @@ public class BookController implements BooksApi {
 
 
     @Override
-    public ResponseEntity<BookDTO> updateBook(@PathVariable Long id, @Valid @RequestBody BookDTO bookDTO) {
+    public ResponseEntity<BookResponseDTO> updateBook(@PathVariable Long id, @Valid @RequestBody BookRequestDTO bookDTO) {
         try {
-            BookDTO updatedBookDTO = this.bookAllocationService.updateBook(id, bookDTO);
+            BookResponseDTO updatedBookDTO = this.bookAllocationService.updateBook(id, bookDTO);
             return ResponseEntity.ok(updatedBookDTO);
         } catch (ResourceNotFoundException ex) {
             BookResponseWithErrorsDTO errorResponseDTO = new BookResponseWithErrorsDTO();
@@ -105,22 +104,3 @@ public class BookController implements BooksApi {
         return new ResponseEntity<PageResponseDTO>(pageResponseDTO, HttpStatus.OK);
     }
 }
-//        @Override
-//    public ResponseEntity<PageResponseDTO<BookDTO>> getAllBooks(
-//            @RequestParam(defaultValue = "0") Integer page,
-//            @RequestParam(defaultValue = "10") Integer size) {
-//
-//        PageRequest pageRequest = PageRequest.of(page, size);
-//
-//        Page<Book> bookPage = bookAllocationService.getAllBooks(pageRequest);
-//
-//        List<BookDTO> responseList = bookPage.getContent().stream()
-//                .map(book -> new BookDTO(book.getId(), book.getTitle(), book.getAuthor(), book.getIsbn(), book.getPublishYear(), book.getGenreIds().stream().map(Long::valueOf).collect(Collectors.toList())))
-//                .collect(Collectors.toList());
-//
-//        PageResponseDTO<BookDTO> pageResponse = new PageResponseDTO<>(
-//                responseList, bookPage.getTotalPages(), bookPage.getTotalElements());
-//
-//        return new ResponseEntity<>(pageResponse, HttpStatus.OK);
-//    }
-

@@ -1,6 +1,6 @@
 package com.capgemini.library.management.project.library_management.model;
 
-public class BookResponseWithErrorsDTO extends BookDTO {
+public class BookResponseWithErrorsDTO extends BookResponseDTO{
 
     private ErrorDTO error;
 
