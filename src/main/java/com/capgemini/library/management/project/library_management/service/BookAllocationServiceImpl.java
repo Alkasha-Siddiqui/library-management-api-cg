@@ -3,9 +3,8 @@ package com.capgemini.library.management.project.library_management.service;
 import com.capgemini.library.management.project.library_management.entity.Book;
 import com.capgemini.library.management.project.library_management.exception.DuplicateISBNException;
 import com.capgemini.library.management.project.library_management.exception.ResourceNotFoundException;
-//import com.capgemini.library.management.project.library_management.mapper.BookPopulator;
-//import com.capgemini.library.management.project.library_management.mapper.BookMapper;
-import com.capgemini.library.management.project.library_management.model.BookDTO;
+import com.capgemini.library.management.project.library_management.model.BookRequestDTO;
+import com.capgemini.library.management.project.library_management.model.BookResponseDTO;
 import com.capgemini.library.management.project.library_management.model.PageResponseDTO;
 import com.capgemini.library.management.project.library_management.repository.BookRepository;
 import jakarta.transaction.Transactional;
@@ -27,32 +26,31 @@ public class BookAllocationServiceImpl implements BookAllocationService {
     @Autowired
     private BookRepository bookRepository;
 
-//    @Autowired
-//    BookMapper bookMapper;
-
     @Autowired
     private ModelMapper modelMapper;
 
     @Override
-    public BookDTO addBook(BookDTO bookDTO) {
+    public BookResponseDTO addBook(BookRequestDTO bookRequestDTO) {
 
-        if (bookRepository.existsByIsbn(bookDTO.getIsbn())) {
-            throw new DuplicateISBNException("User", "id", bookDTO.getIsbn());
+        if (bookRepository.existsByIsbn(bookRequestDTO.getIsbn())) {
+            throw new DuplicateISBNException("User", "id", bookRequestDTO.getIsbn());
         }
 
-        Book book = this.dtoToBook(bookDTO);
+        Book book = modelMapper.map(bookRequestDTO, Book.class);
         Book savedBook = bookRepository.save(book);
-        return this.bookToDto(savedBook);
+        BookResponseDTO bookResponseDTO = modelMapper.map(savedBook, BookResponseDTO.class);
+        return bookResponseDTO;
     }
 
     @Override
-    public BookDTO getBookById(Long id)  {
+    public BookResponseDTO getBookById(Long id)  {
         Book book = bookRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("User", "id", id));
-        return this.bookToDto(book);
+        BookResponseDTO bookResponseDTO = modelMapper.map(book, BookResponseDTO.class);
+        return bookResponseDTO;
     }
 
     @Override
-    public BookDTO updateBook(Long id, BookDTO bookDTO) {
+    public BookResponseDTO updateBook(Long id, BookRequestDTO bookDTO) {
         Book book = bookRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("User", "id", id));
 
         book.setTitle(bookDTO.getTitle());
@@ -63,8 +61,8 @@ public class BookAllocationServiceImpl implements BookAllocationService {
         book.setUpdatedDateTime(OffsetDateTime.now(ZoneOffset.UTC));
 
         Book updatedBook = bookRepository.save(book);
-        BookDTO bookDTO1 = this.bookToDto(updatedBook);
-        return bookDTO1;
+        BookResponseDTO bookResponseDTO = modelMapper.map(updatedBook, BookResponseDTO.class);
+        return bookResponseDTO;
     }
 
     @Override
@@ -78,7 +76,7 @@ public class BookAllocationServiceImpl implements BookAllocationService {
 
         Page<Book>  pageBook = this.bookRepository.findAll(p);
         List<Book> allBooks = pageBook.getContent();
-        List<BookDTO> bookDTOS = allBooks.stream().map((book) -> this.modelMapper.map(book, BookDTO.class)).collect(Collectors.toList());
+        List<BookResponseDTO> bookDTOS = allBooks.stream().map((book) -> this.modelMapper.map(book, BookResponseDTO.class)).collect(Collectors.toList());
 
         PageResponseDTO pageResponseDTO = new PageResponseDTO();
 
@@ -90,33 +88,4 @@ public class BookAllocationServiceImpl implements BookAllocationService {
         return pageResponseDTO;
     }
 
-
-    public Book dtoToBook(BookDTO bookDTO) {
-//        Book book = new Book();
-//        book.setTitle(bookDTO.getTitle());
-//        book.setAuthor(bookDTO.getAuthor());
-//        book.setIsbn(bookDTO.getIsbn());
-//        book.setPublishYear(bookDTO.getPublishYear());
-//        book.setGenreIds(bookDTO.getGenreIds());
-//        book.setAddedDateTime(OffsetDateTime.now(ZoneOffset.UTC));
-//        book.setUpdatedDateTime(OffsetDateTime.now(ZoneOffset.UTC));
-
-        Book book = this.modelMapper.map(bookDTO, Book.class);
-        return book;
-    }
-
-    public BookDTO bookToDto(Book book) {
-//        BookDTO bookDTO = new BookDTO();
-//        bookDTO.setId(Long.valueOf(book.getId()));
-//        bookDTO.setTitle(book.getTitle());
-//        bookDTO.setAuthor(book.getAuthor());
-//        bookDTO.setIsbn(book.getIsbn());
-//        bookDTO.setPublishYear(book.getPublishYear());
-//        bookDTO.setGenreIds(book.getGenreIds());
-//        bookDTO.setAddedDateTime(book.getAddedDateTime());
-//        bookDTO.setUpdatedDateTime(book.getUpdatedDateTime());
-
-        BookDTO bookDTO = this.modelMapper.map(book, BookDTO.class);
-        return bookDTO;
-    }
 }

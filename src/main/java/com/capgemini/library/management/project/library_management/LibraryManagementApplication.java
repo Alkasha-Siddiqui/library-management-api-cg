@@ -1,6 +1,5 @@
 package com.capgemini.library.management.project.library_management;
 
-//import com.capgemini.library.management.project.library_management.mapper.BookMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,6 +14,7 @@ public class LibraryManagementApplication {
 
 	@Bean
 	public ModelMapper modelMapper() {
-        return new ModelMapper();
+		ModelMapper modelMapper = new ModelMapper();
+		return new ModelMapper();
 	}
 }
