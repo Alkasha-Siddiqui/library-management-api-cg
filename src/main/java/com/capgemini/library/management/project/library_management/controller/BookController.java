@@ -5,6 +5,7 @@ import com.capgemini.library.management.project.library_management.exception.Dup
 import com.capgemini.library.management.project.library_management.exception.ResourceNotFoundException;
 import com.capgemini.library.management.project.library_management.model.*;
 import com.capgemini.library.management.project.library_management.service.BookAllocationService;
+import com.capgemini.library.management.project.library_management.service.GenreAllocationService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -26,6 +28,14 @@ public class BookController implements BooksApi {
 
     @Autowired
     BookAllocationService bookAllocationService;
+
+    @Autowired
+    GenreAllocationService genreAllocationService;
+
+    public BookController(BookAllocationService bookAllocationService, GenreAllocationService genreAllocationService) {
+        this.bookAllocationService = bookAllocationService;
+        this.genreAllocationService = genreAllocationService;
+    }
 
     private static final Logger log = LoggerFactory.getLogger(BookController.class);
 
@@ -103,4 +113,19 @@ public class BookController implements BooksApi {
         PageResponseDTO pageResponseDTO = this.bookAllocationService.getAllBooks(page, size);
         return new ResponseEntity<PageResponseDTO>(pageResponseDTO, HttpStatus.OK);
     }
+
+    @Override
+    public ResponseEntity<GenreResponseDTO> createGenre(@Valid @RequestBody GenreRequestDTO genreRequestDTO) {
+            GenreResponseDTO addedGenreDTO = genreAllocationService.createGenre(genreRequestDTO);
+            return new ResponseEntity<>(addedGenreDTO, HttpStatus.CREATED);
+    }
+
+    @Override
+    public ResponseEntity<List<GenreResponseDTO>> getAllGenres(){
+        List<GenreResponseDTO> genreResponseDTO = this.genreAllocationService.getAllGenres();
+        return new ResponseEntity<>(genreResponseDTO, HttpStatus.OK);
+    }
+
+
+
 }
