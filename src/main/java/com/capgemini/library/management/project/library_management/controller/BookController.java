@@ -6,6 +6,9 @@ import com.capgemini.library.management.project.library_management.exception.Res
 import com.capgemini.library.management.project.library_management.model.*;
 import com.capgemini.library.management.project.library_management.service.BookAllocationService;
 import com.capgemini.library.management.project.library_management.service.GenreAllocationService;
+import com.capgemini.library.management.project.library_management.service.MemberAllocationService;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,9 +35,13 @@ public class BookController implements BooksApi {
     @Autowired
     GenreAllocationService genreAllocationService;
 
-    public BookController(BookAllocationService bookAllocationService, GenreAllocationService genreAllocationService) {
+    @Autowired
+    MemberAllocationService memberAllocationService;
+
+    public BookController(BookAllocationService bookAllocationService, GenreAllocationService genreAllocationService, MemberAllocationService memberAllocationService) {
         this.bookAllocationService = bookAllocationService;
         this.genreAllocationService = genreAllocationService;
+        this.memberAllocationService = memberAllocationService;
     }
 
     private static final Logger log = LoggerFactory.getLogger(BookController.class);
@@ -126,6 +133,27 @@ public class BookController implements BooksApi {
         return new ResponseEntity<>(genreResponseDTO, HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<MemberDTO> registerMember( @Valid @RequestBody MemberDTO memberDTO){
+        if (memberDTO.getEmail() == null || memberDTO.getEmail().isEmpty() ||
+                memberDTO.getFirstName() == null || memberDTO.getFirstName().isEmpty() ||
+                memberDTO.getLastName() == null || memberDTO.getLastName().isEmpty()) {
+            throw new IllegalArgumentException("Required fields (email, firstName, lastName) cannot be empty");
+        }
 
+        MemberDTO memberResponseDTO = memberAllocationService.registerMember(memberDTO);
+        return new ResponseEntity<>(memberResponseDTO, HttpStatus.CREATED);
+    }
 
+//    @Override
+//    public ResponseEntity<List<MemberDTO>> getAllMembers(String status) {
+//        List<MemberDTO> memberDTO = this.memberAllocationService.getAllMembers(status);
+//        return new ResponseEntity<>(memberDTO, HttpStatus.OK);
+//    }
+
+    @Override
+    public ResponseEntity<List<MemberDTO>> getAllMembers(@RequestParam(required = false) String status) {
+        List<MemberDTO> memberDTOs = memberAllocationService.getAllMembers(status);
+        return new ResponseEntity<>(memberDTOs, HttpStatus.OK);
+    }
 }
