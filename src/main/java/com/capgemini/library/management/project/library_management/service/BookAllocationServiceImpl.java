@@ -1,10 +1,13 @@
 package com.capgemini.library.management.project.library_management.service;
 
 import com.capgemini.library.management.project.library_management.entity.Book;
+import com.capgemini.library.management.project.library_management.entity.Genre;
 import com.capgemini.library.management.project.library_management.exception.AlreadyExistsException;
+import com.capgemini.library.management.project.library_management.exception.GenreNotFoundException;
 import com.capgemini.library.management.project.library_management.exception.ResourceNotFoundException;
 import com.capgemini.library.management.project.library_management.model.*;
 import com.capgemini.library.management.project.library_management.repository.BookRepository;
+import com.capgemini.library.management.project.library_management.repository.GenreRepository;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,9 @@ public class BookAllocationServiceImpl implements BookAllocationService {
     private BookRepository bookRepository;
 
     @Autowired
+    private GenreRepository genreRepository;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @Override
@@ -35,10 +41,19 @@ public class BookAllocationServiceImpl implements BookAllocationService {
             throw new AlreadyExistsException("ISBN", "id", bookRequestDTO.getIsbn());
         }
 
+        // Check if all genreIds exist
+        List<Long> genreIds = bookRequestDTO.getGenreIds();
+        List<Genre> genres = genreRepository.findAllById(genreIds);
+        if (genres.size() != genreIds.size()) {
+            List<Long> foundGenreIds = genres.stream().map(Genre::getId).collect(Collectors.toList());
+            List<Long> notFoundGenreIds = genreIds.stream().filter(id -> !foundGenreIds.contains(id)).collect(Collectors.toList());
+            throw new GenreNotFoundException(notFoundGenreIds);
+        }
+
         Book book = modelMapper.map(bookRequestDTO, Book.class);
+        book.setGenres(genres); // Set the genres to the book
         Book savedBook = bookRepository.save(book);
-        BookResponseDTO bookResponseDTO = modelMapper.map(savedBook, BookResponseDTO.class);
-        return bookResponseDTO;
+        return modelMapper.map(savedBook, BookResponseDTO.class);
     }
 
     @Override

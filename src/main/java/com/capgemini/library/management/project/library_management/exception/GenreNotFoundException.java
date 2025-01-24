@@ -1,20 +1,9 @@
 package com.capgemini.library.management.project.library_management.exception;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.util.List;
 
-@Getter
-@Setter
 public class GenreNotFoundException extends RuntimeException {
-
-    String resourceName;
-    String fieldName;
-    String fieldValue;
-
-    public GenreNotFoundException(String resourceName, String fieldName, String fieldValue) {
-        super(String.format("%s not found with %s : '%s'", resourceName, fieldName, fieldValue));
-        this.resourceName = resourceName;
-        this.fieldName = fieldName;
-        this.fieldValue = fieldValue;
+    public GenreNotFoundException(List<Long> genreIds) {
+        super(String.format("Genre not found with ids: %s", genreIds));
     }
 }

@@ -49,10 +49,10 @@ public class BookController implements BooksApi {
         try {
             BookResponseDTO addedBookDTO = bookAllocationService.addBook(bookDTO);
             return new ResponseEntity<>(addedBookDTO, HttpStatus.CREATED);
-        } catch (AlreadyExistsException ex) {
+        } catch (AlreadyExistsException | GenreNotFoundException ex) {
             BookResponseWithErrorsDTO errorResponseDTO = new BookResponseWithErrorsDTO();
             ErrorDTO error = new ErrorDTO();
-            error.setCode("DUPLICATE_ISBN");
+            error.setCode("BAD_REQUEST");
             error.setMessage(ex.getMessage());
             error.setTimestamp(OffsetDateTime.now(ZoneOffset.UTC));
             errorResponseDTO.setError(error);
