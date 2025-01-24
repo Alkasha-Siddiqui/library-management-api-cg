@@ -3,7 +3,6 @@ package com.capgemini.library.management.project.library_management.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-
 import java.util.*;
 
 @Getter

@@ -5,14 +5,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class DuplicateISBNException extends RuntimeException {
+public class AlreadyExistsException extends RuntimeException {
 
     String resourceName;
     String fieldName;
     String fieldValue;
 
-    public DuplicateISBNException(String resourceName, String fieldName, String fieldValue) {
-        super(String.format("%s not found with %s : '%s'", resourceName, fieldName, fieldValue));
+    public AlreadyExistsException(String resourceName, String fieldName, String fieldValue) {
+        super(String.format("%s already exists with %s : '%s'", resourceName, fieldName, fieldValue));
         this.resourceName = resourceName;
         this.fieldName = fieldName;
         this.fieldValue = fieldValue;

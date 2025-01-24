@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import com.capgemini.library.management.project.library_management.repository.GenreRepository;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,16 +23,13 @@ public class Book {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
-    //@Column(name="book_title")
     private String title;
 
-    //@Column(name="author")
     private String author;
 
     @Column(nullable = false, unique = true)
     private String isbn;
 
-    //@Column(name="publish_year")
     private Integer publishYear;
 
     private List<Long> genreIds = new ArrayList<>();
@@ -49,12 +44,9 @@ public class Book {
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private Set<Loan> loans = new HashSet<>();
 
-    //@Column(name="added_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime addedDateTime = OffsetDateTime.now(ZoneOffset.UTC);
 
-
-    //@Column(name="updated_date" )
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime updatedDateTime = OffsetDateTime.now(ZoneOffset.UTC);
 

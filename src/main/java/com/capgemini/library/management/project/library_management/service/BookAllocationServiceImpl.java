@@ -1,13 +1,10 @@
 package com.capgemini.library.management.project.library_management.service;
 
 import com.capgemini.library.management.project.library_management.entity.Book;
-import com.capgemini.library.management.project.library_management.entity.Genre;
-import com.capgemini.library.management.project.library_management.exception.DuplicateISBNException;
-import com.capgemini.library.management.project.library_management.exception.GenreNotFoundException;
+import com.capgemini.library.management.project.library_management.exception.AlreadyExistsException;
 import com.capgemini.library.management.project.library_management.exception.ResourceNotFoundException;
 import com.capgemini.library.management.project.library_management.model.*;
 import com.capgemini.library.management.project.library_management.repository.BookRepository;
-import com.capgemini.library.management.project.library_management.repository.GenreRepository;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +32,7 @@ public class BookAllocationServiceImpl implements BookAllocationService {
     public BookResponseDTO addBook(BookRequestDTO bookRequestDTO) {
 
         if (bookRepository.existsByIsbn(bookRequestDTO.getIsbn())) {
-            throw new DuplicateISBNException("User", "id", bookRequestDTO.getIsbn());
+            throw new AlreadyExistsException("ISBN", "id", bookRequestDTO.getIsbn());
         }
 
         Book book = modelMapper.map(bookRequestDTO, Book.class);
@@ -46,14 +43,14 @@ public class BookAllocationServiceImpl implements BookAllocationService {
 
     @Override
     public BookResponseDTO getBookById(Long id)  {
-        Book book = bookRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("User", "id", id));
+        Book book = bookRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Book", "id", id));
         BookResponseDTO bookResponseDTO = modelMapper.map(book, BookResponseDTO.class);
         return bookResponseDTO;
     }
 
     @Override
     public BookResponseDTO updateBook(Long id, BookRequestDTO bookDTO) {
-        Book book = bookRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("User", "id", id));
+        Book book = bookRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Book", "id", id));
 
         book.setTitle(bookDTO.getTitle());
         book.setAuthor(bookDTO.getAuthor());
@@ -69,6 +66,9 @@ public class BookAllocationServiceImpl implements BookAllocationService {
 
     @Override
     public void removeBook(Long id) {
+        if (!bookRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Book", "id", id);
+        }
         bookRepository.deleteById(id);
     }
 
@@ -152,6 +152,4 @@ public class BookAllocationServiceImpl implements BookAllocationService {
         bookResponseDTO.setUpdatedDateTime(book.getUpdatedDateTime());
         return bookResponseDTO;
     }
-
-
 }

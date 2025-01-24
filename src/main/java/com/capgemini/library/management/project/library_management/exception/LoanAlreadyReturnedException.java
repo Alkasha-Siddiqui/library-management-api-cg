@@ -5,14 +5,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class LoanNotIssuedException extends RuntimeException {
+public class LoanAlreadyReturnedException extends RuntimeException {
 
     String resourceName;
     String fieldName;
     Long fieldValue;
 
-    public LoanNotIssuedException(String resourceName, String fieldName, Long fieldValue) {
-        super(String.format("%s not ISSUED with %s : '%s'", resourceName, fieldName, fieldValue));
+    public LoanAlreadyReturnedException(String resourceName, String fieldName, Long fieldValue) {
+        super(String.format("%s is already returned with %s : '%s'", resourceName, fieldName, fieldValue));
         this.resourceName = resourceName;
         this.fieldName = fieldName;
         this.fieldValue = fieldValue;

@@ -4,7 +4,6 @@ public class LoanResponseWithErrorsDTO extends LoanDTO{
 
     private ErrorDTO error;
 
-    // Getters and Setters for the 'error' field
     public ErrorDTO getError() {
         return error;
     }

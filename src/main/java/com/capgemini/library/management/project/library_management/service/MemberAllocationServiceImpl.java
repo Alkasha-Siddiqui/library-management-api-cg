@@ -1,16 +1,12 @@
 package com.capgemini.library.management.project.library_management.service;
 
-import com.capgemini.library.management.project.library_management.entity.Genre;
 import com.capgemini.library.management.project.library_management.entity.Member;
-import com.capgemini.library.management.project.library_management.model.GenreResponseDTO;
 import com.capgemini.library.management.project.library_management.model.MemberDTO;
 import com.capgemini.library.management.project.library_management.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.data.jpa.domain.Specification;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
