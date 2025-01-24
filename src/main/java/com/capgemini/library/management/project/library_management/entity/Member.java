@@ -11,6 +11,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "members")
@@ -51,6 +53,9 @@ public class Member {
         ACTIVE, SUSPENDED, EXPIRED
     }
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Loan> loans = new ArrayList<>();
+
     public Long getId() {
         return id;
     }
@@ -59,27 +64,27 @@ public class Member {
         this.id = id;
     }
 
-    public @Size(max = 50) String getFirstName() {
+    public @NotBlank @Size(max = 50) String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(@Size(max = 50) String firstName) {
+    public void setFirstName(@NotBlank @Size(max = 50) String firstName) {
         this.firstName = firstName;
     }
 
-    public @Size(max = 50) String getLastName() {
+    public @NotBlank @Size(max = 50) String getLastName() {
         return lastName;
     }
 
-    public void setLastName(@Size(max = 50) String lastName) {
+    public void setLastName(@NotBlank @Size(max = 50) String lastName) {
         this.lastName = lastName;
     }
 
-    public @Email String getEmail() {
+    public @Email @NotBlank String getEmail() {
         return email;
     }
 
-    public void setEmail(@Email String email) {
+    public void setEmail(@Email @NotBlank String email) {
         this.email = email;
     }
 
@@ -105,5 +110,13 @@ public class Member {
 
     public void setUpdatedDateTime(OffsetDateTime updatedDateTime) {
         this.updatedDateTime = updatedDateTime;
+    }
+
+    public List<Loan> getLoans() {
+        return loans;
+    }
+
+    public void setLoans(List<Loan> loans) {
+        this.loans = loans;
     }
 }

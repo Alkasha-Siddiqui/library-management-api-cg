@@ -32,13 +32,6 @@ public class MemberAllocationServiceImpl implements MemberAllocationService {
         return memberResponseDTO;
     }
 
-//    @Override
-//    public List<MemberDTO> getAllMembers(String status) {
-//        List<MemberDTO> allMembers = this.memberRepository.findAll();
-//        List<MemberDTO> memberDTO = allMembers.stream().map(member -> modelMapper.map(member, MemberDTO.class)).collect(Collectors.toList());
-//        return memberDTO;
-//    }
-
     @Override
     public List<MemberDTO> getAllMembers(String status) {
         List<Member> members;
@@ -51,19 +44,4 @@ public class MemberAllocationServiceImpl implements MemberAllocationService {
 
         return members.stream().map(member -> modelMapper.map(member, MemberDTO.class)).collect(Collectors.toList());
     }
-
 }
-//    @Override
-//    public GenreResponseDTO createGenre(GenreRequestDTO genreRequestDTO) {
-//        Genre genre = modelMapper.map(genreRequestDTO, Genre.class);
-//        Genre savedGenre = genreRepository.save(genre);
-//        GenreResponseDTO genreResponseDTO = modelMapper.map(savedGenre, GenreResponseDTO.class);
-//        return genreResponseDTO;
-//    }
-//
-//    @Override
-//    public List<GenreResponseDTO> getAllGenres() {
-//        List<Genre> allGenres = this.genreRepository.findAll();
-//        List<GenreResponseDTO> genreResponseDTO = allGenres.stream().map(genre -> modelMapper.map(genre, GenreResponseDTO.class)).collect(Collectors.toList());
-//        return genreResponseDTO;
-//    }

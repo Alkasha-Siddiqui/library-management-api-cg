@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
-import java.util.Objects;
+import java.util.*;
 
 @Getter
 @Setter
@@ -26,4 +26,39 @@ public class Genre {
     @Column(name = "description", length = 200)
     @Size(max = 200)
     private String description;
+
+    @ManyToMany(mappedBy = "genres", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<Book> books = new ArrayList<>();
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public @Size(max = 50) String getName() {
+        return name;
+    }
+
+    public void setName(@Size(max = 50) String name) {
+        this.name = name;
+    }
+
+    public @Size(max = 200) String getDescription() {
+        return description;
+    }
+
+    public void setDescription(@Size(max = 200) String description) {
+        this.description = description;
+    }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
 }

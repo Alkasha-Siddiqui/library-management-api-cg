@@ -1,17 +1,19 @@
 package com.capgemini.library.management.project.library_management.service;
 
 import com.capgemini.library.management.project.library_management.entity.Book;
+import com.capgemini.library.management.project.library_management.entity.Genre;
 import com.capgemini.library.management.project.library_management.exception.DuplicateISBNException;
+import com.capgemini.library.management.project.library_management.exception.GenreNotFoundException;
 import com.capgemini.library.management.project.library_management.exception.ResourceNotFoundException;
-import com.capgemini.library.management.project.library_management.model.BookRequestDTO;
-import com.capgemini.library.management.project.library_management.model.BookResponseDTO;
-import com.capgemini.library.management.project.library_management.model.PageResponseDTO;
+import com.capgemini.library.management.project.library_management.model.*;
 import com.capgemini.library.management.project.library_management.repository.BookRepository;
+import com.capgemini.library.management.project.library_management.repository.GenreRepository;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 import java.time.OffsetDateTime;
@@ -87,5 +89,69 @@ public class BookAllocationServiceImpl implements BookAllocationService {
         pageResponseDTO.setTotalPages(pageBook.getTotalPages());
         return pageResponseDTO;
     }
+
+    @Override
+    public PageResponseDTO searchBooks(BookSearchRequestDTO bookSearchRequestDTO) {
+        Sort.Direction direction = Sort.Direction.ASC; // Default to ASC
+        if (bookSearchRequestDTO.getSortDirection() != null) {
+            direction = Sort.Direction.valueOf(bookSearchRequestDTO.getSortDirection().name().toUpperCase());
+        }
+
+        PageRequest pageRequest = PageRequest.of(
+                bookSearchRequestDTO.getPage(),
+                bookSearchRequestDTO.getSize(),
+                Sort.by(direction, bookSearchRequestDTO.getSortBy().getValue())
+        );
+
+        Page<Book> bookPage = bookRepository.findAll(pageRequest);
+
+        List<BookResponseDTO> bookResponseDTOs = bookPage.getContent().stream()
+                .filter(book -> filterBook(book, bookSearchRequestDTO))
+                .map(this::convertToBookResponseDTO)
+                .collect(Collectors.toList());
+
+        PageResponseDTO pageResponseDTO = new PageResponseDTO();
+        pageResponseDTO.setContent(bookResponseDTOs);
+        pageResponseDTO.setTotalElements((long) bookResponseDTOs.size());
+        pageResponseDTO.setTotalPages((int) Math.ceil((double) bookResponseDTOs.size() / bookSearchRequestDTO.getSize()));
+        pageResponseDTO.setPageNumber(bookSearchRequestDTO.getPage());
+        pageResponseDTO.setPageSize(bookSearchRequestDTO.getSize());
+
+        return pageResponseDTO;
+    }
+
+    private boolean filterBook(Book book, BookSearchRequestDTO request) {
+        if (request.getSearchTerm() != null && !book.getTitle().contains(request.getSearchTerm()) && !book.getAuthor().contains(request.getSearchTerm())) {
+            return false;
+        }
+        if (request.getGenreId() != null && !book.getGenreIds().contains(request.getGenreId())) {
+            return false;
+        }
+        if (request.getAuthor() != null && !book.getAuthor().contains(request.getAuthor())) {
+            return false;
+        }
+        if (request.getPublishYearFrom() != null && book.getPublishYear() < request.getPublishYearFrom()) {
+            return false;
+        }
+        if (request.getPublishYearTo() != null && book.getPublishYear() > request.getPublishYearTo()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private BookResponseDTO convertToBookResponseDTO(Book book) {
+        BookResponseDTO bookResponseDTO = new BookResponseDTO();
+        bookResponseDTO.setId(book.getId());
+        bookResponseDTO.setTitle(book.getTitle());
+        bookResponseDTO.setAuthor(book.getAuthor());
+        bookResponseDTO.setIsbn(book.getIsbn());
+        bookResponseDTO.setPublishYear(book.getPublishYear());
+        bookResponseDTO.setGenreIds(book.getGenreIds());
+        bookResponseDTO.setAddedDateTime(book.getAddedDateTime());
+        bookResponseDTO.setUpdatedDateTime(book.getUpdatedDateTime());
+        return bookResponseDTO;
+    }
+
 
 }

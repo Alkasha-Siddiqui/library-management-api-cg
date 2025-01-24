@@ -2,7 +2,12 @@ package com.capgemini.library.management.project.library_management.entity;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import com.capgemini.library.management.project.library_management.repository.GenreRepository;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,7 +23,7 @@ public class Book {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     //@Column(name="book_title")
     private String title;
@@ -32,8 +37,17 @@ public class Book {
     //@Column(name="publish_year")
     private Integer publishYear;
 
-    //@Column(name="genre_ids")
-    private List<Long> genreIds;
+    private List<Long> genreIds = new ArrayList<>();
+
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "book_genre",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id"))
+    private List<Genre> genres = new ArrayList<>();
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    private Set<Loan> loans = new HashSet<>();
 
     //@Column(name="added_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -44,11 +58,11 @@ public class Book {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime updatedDateTime = OffsetDateTime.now(ZoneOffset.UTC);
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -92,6 +106,22 @@ public class Book {
         this.genreIds = genreIds;
     }
 
+    public List<Genre> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(List<Genre> genres) {
+        this.genres = genres;
+    }
+
+    public Set<Loan> getLoans() {
+        return loans;
+    }
+
+    public void setLoans(Set<Loan> loans) {
+        this.loans = loans;
+    }
+
     public OffsetDateTime getAddedDateTime() {
         return OffsetDateTime.from(addedDateTime);
     }
@@ -105,5 +135,4 @@ public class Book {
     public void setUpdatedDateTime(OffsetDateTime updatedDateTime) {
         this.updatedDateTime = OffsetDateTime.now(ZoneOffset.UTC);
     }
-
 }

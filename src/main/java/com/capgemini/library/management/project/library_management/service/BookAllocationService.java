@@ -3,6 +3,7 @@ package com.capgemini.library.management.project.library_management.service;
 import com.capgemini.library.management.project.library_management.exception.DuplicateISBNException;
 import com.capgemini.library.management.project.library_management.model.BookRequestDTO;
 import com.capgemini.library.management.project.library_management.model.BookResponseDTO;
+import com.capgemini.library.management.project.library_management.model.BookSearchRequestDTO;
 import com.capgemini.library.management.project.library_management.model.PageResponseDTO;
 
 public interface BookAllocationService {
@@ -15,4 +16,6 @@ public interface BookAllocationService {
     void removeBook(Long id);
 
     PageResponseDTO getAllBooks(Integer page, Integer size);
+
+    PageResponseDTO searchBooks(BookSearchRequestDTO bookSearchRequestDTO);
 }
