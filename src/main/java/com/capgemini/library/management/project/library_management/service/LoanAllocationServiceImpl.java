@@ -1,10 +1,12 @@
 package com.capgemini.library.management.project.library_management.service;
 
 import com.capgemini.library.management.project.library_management.entity.Book;
+import com.capgemini.library.management.project.library_management.entity.BookCopies;
 import com.capgemini.library.management.project.library_management.entity.Loan;
 import com.capgemini.library.management.project.library_management.entity.Member;
 import com.capgemini.library.management.project.library_management.exception.*;
 import com.capgemini.library.management.project.library_management.model.LoanDTO;
+import com.capgemini.library.management.project.library_management.repository.BookCopiesRepository;
 import com.capgemini.library.management.project.library_management.repository.BookRepository;
 import com.capgemini.library.management.project.library_management.repository.LoanRepository;
 import com.capgemini.library.management.project.library_management.repository.MemberRepository;
@@ -32,6 +34,9 @@ public class LoanAllocationServiceImpl implements LoanAllocationService {
     @Autowired
     private BookRepository bookRepository;
 
+    @Autowired
+    private BookCopiesRepository bookCopiesRepository;
+
     @Override
     public LoanDTO issueLoan(LoanDTO loanDTO) {
         // Check if member exists
@@ -47,10 +52,16 @@ public class LoanAllocationServiceImpl implements LoanAllocationService {
         Book book = bookRepository.findById(loanDTO.getBookId())
                 .orElseThrow(() -> new BookNotFoundException(loanDTO.getBookId()));
 
-        // Check if book is already issued
-        if (loanRepository.existsByBookIdAndStatus(loanDTO.getBookId(), Loan.StatusEnum.ISSUED)) {
-            throw new BookAlreadyIssuedException(loanDTO.getBookId());
+        // Check if there are available copies
+        BookCopies bookCopies = bookCopiesRepository.findByBookId(book.getId())
+                .orElseThrow(() -> new BookNotFoundException(book.getId()));
+        if (bookCopies.getAvailableCopies() <= 0) {
+            throw new BookOutOfStockException(book.getId());
         }
+
+        // Decrease available copies
+        bookCopies.setAvailableCopies(bookCopies.getAvailableCopies() - 1);
+        bookCopiesRepository.save(bookCopies);
 
         Loan loan = modelMapper.map(loanDTO, Loan.class);
         Loan savedLoan = loanRepository.save(loan);
@@ -77,9 +88,16 @@ public class LoanAllocationServiceImpl implements LoanAllocationService {
             throw new LoanAlreadyReturnedException("Loan", "id", loan.getId());
         }
 
+        final Long bookId = loan.getBook().getId();
+
         loan.setStatus(Loan.StatusEnum.RETURNED);
         loan.setReturnDate(LocalDate.now());
         loan = loanRepository.save(loan);
+
+        BookCopies bookCopies = bookCopiesRepository.findByBookId(bookId)
+                .orElseThrow(() -> new BookNotFoundException(bookId));
+        bookCopies.setAvailableCopies(bookCopies.getAvailableCopies() + 1);
+        bookCopiesRepository.save(bookCopies);
 
         return modelMapper.map(loan, LoanDTO.class);
     }

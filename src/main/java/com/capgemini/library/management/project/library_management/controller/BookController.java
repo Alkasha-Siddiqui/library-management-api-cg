@@ -156,7 +156,7 @@ public class BookController implements BooksApi {
         try {
             LoanDTO loanResponseDTO = loanAllocationService.issueLoan(loanDTO);
             return new ResponseEntity<>(loanResponseDTO, HttpStatus.CREATED);
-        } catch (MemberNotFoundException | BookNotFoundException | BookAlreadyIssuedException | UserSuspendedException ex) {
+        } catch (MemberNotFoundException | BookNotFoundException | BookOutOfStockException | UserSuspendedException ex) {
             LoanResponseWithErrorsDTO errorResponse = new LoanResponseWithErrorsDTO();
             ErrorDTO error = new ErrorDTO();
             error.setCode("INVALID_INPUT");

@@ -1,11 +1,13 @@
 package com.capgemini.library.management.project.library_management.service;
 
 import com.capgemini.library.management.project.library_management.entity.Book;
+import com.capgemini.library.management.project.library_management.entity.BookCopies;
 import com.capgemini.library.management.project.library_management.entity.Genre;
 import com.capgemini.library.management.project.library_management.exception.AlreadyExistsException;
 import com.capgemini.library.management.project.library_management.exception.GenreNotFoundException;
 import com.capgemini.library.management.project.library_management.exception.ResourceNotFoundException;
 import com.capgemini.library.management.project.library_management.model.*;
+import com.capgemini.library.management.project.library_management.repository.BookCopiesRepository;
 import com.capgemini.library.management.project.library_management.repository.BookRepository;
 import com.capgemini.library.management.project.library_management.repository.GenreRepository;
 import jakarta.transaction.Transactional;
@@ -32,6 +34,9 @@ public class BookAllocationServiceImpl implements BookAllocationService {
     private GenreRepository genreRepository;
 
     @Autowired
+    private BookCopiesRepository bookCopiesRepository;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @Override
@@ -41,7 +46,6 @@ public class BookAllocationServiceImpl implements BookAllocationService {
             throw new AlreadyExistsException("ISBN", "id", bookRequestDTO.getIsbn());
         }
 
-        // Check if all genreIds exist
         List<Long> genreIds = bookRequestDTO.getGenreIds();
         List<Genre> genres = genreRepository.findAllById(genreIds);
         if (genres.size() != genreIds.size()) {
@@ -53,6 +57,13 @@ public class BookAllocationServiceImpl implements BookAllocationService {
         Book book = modelMapper.map(bookRequestDTO, Book.class);
         book.setGenres(genres); // Set the genres to the book
         Book savedBook = bookRepository.save(book);
+
+        BookCopies bookCopies = new BookCopies();
+        bookCopies.setBook(savedBook);
+        bookCopies.setTotalCopies(3);
+        bookCopies.setAvailableCopies(3);
+        bookCopiesRepository.save(bookCopies);
+
         return modelMapper.map(savedBook, BookResponseDTO.class);
     }
 
