@@ -44,7 +44,9 @@ public class BookController implements BooksApi {
     @Override
     public ResponseEntity<BookResponseDTO> addBook(@Valid @RequestBody BookRequestDTO bookDTO) {
         try {
-            if (bookDTO.getTitle().isEmpty() || bookDTO.getAuthor().isEmpty() || bookDTO.getIsbn().isEmpty()) {
+            if (bookDTO.getTitle()==null ||bookDTO.getTitle().isEmpty() ||
+                    bookDTO.getAuthor()==null || bookDTO.getAuthor().isEmpty() ||
+                    bookDTO.getIsbn()==null|| bookDTO.getIsbn().isEmpty()) {
                 throw new InvalidInputException("Book", REQUIRED_FIELDS, "title, author, isbn");
             }
 
@@ -151,9 +153,9 @@ public class BookController implements BooksApi {
     @Override
     public ResponseEntity<MemberDTO> registerMember( @Valid @RequestBody MemberDTO memberDTO){
         try{
-            if (memberDTO.getFirstName().isEmpty() ||
-                   memberDTO.getLastName().isEmpty() ||
-                   memberDTO.getEmail().isEmpty()) {
+            if (memberDTO.getFirstName()==null || memberDTO.getFirstName().isEmpty() ||
+                   memberDTO.getLastName()==null || memberDTO.getLastName().isEmpty() ||
+                   memberDTO.getEmail()==null || memberDTO.getEmail().isEmpty()) {
                 throw new InvalidInputException("Member", REQUIRED_FIELDS, "firstName, lastName, email");
             }
 
