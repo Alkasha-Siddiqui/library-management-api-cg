@@ -2,7 +2,7 @@ package com.capgemini.library.management.project.library_management.model;
 
 import java.util.Objects;
 
-public class BookResponseWithErrorsDTO extends BookResponseDTO{
+public class MemberResponseWithErrorsDTO extends MemberDTO{
 
     private ErrorDTO error;
 
@@ -19,7 +19,7 @@ public class BookResponseWithErrorsDTO extends BookResponseDTO{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        BookResponseWithErrorsDTO that = (BookResponseWithErrorsDTO) o;
+        MemberResponseWithErrorsDTO that = (MemberResponseWithErrorsDTO) o;
         return Objects.equals(error, that.error);
     }
 

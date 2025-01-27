@@ -14,18 +14,20 @@ import java.util.stream.Collectors;
 @Transactional
 public class MemberAllocationServiceImpl implements MemberAllocationService {
 
-    @Autowired
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    private ModelMapper modelMapper;
+    public MemberAllocationServiceImpl(MemberRepository memberRepository, ModelMapper modelMapper) {
+        this.memberRepository = memberRepository;
+        this.modelMapper = modelMapper;
+    }
 
     @Override
     public MemberDTO registerMember(MemberDTO memberDTO) {
         Member member = modelMapper.map(memberDTO, Member.class);
         Member savedMember = memberRepository.save(member);
-        MemberDTO memberResponseDTO = modelMapper.map(savedMember, MemberDTO.class);
-        return memberResponseDTO;
+        return modelMapper.map(savedMember, MemberDTO.class);
     }
 
     @Override

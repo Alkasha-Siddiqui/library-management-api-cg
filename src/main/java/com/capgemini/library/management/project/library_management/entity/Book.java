@@ -23,8 +23,10 @@ public class Book {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String title;
 
+    @Column(nullable = false)
     private String author;
 
     @Column(nullable = false, unique = true)
@@ -117,6 +119,7 @@ public class Book {
     public OffsetDateTime getAddedDateTime() {
         return OffsetDateTime.from(addedDateTime);
     }
+
     public void setAddedDateTime(OffsetDateTime addedDateTime) {
         this.addedDateTime = OffsetDateTime.now(ZoneOffset.UTC);
     }

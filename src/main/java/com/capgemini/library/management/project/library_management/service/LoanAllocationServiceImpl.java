@@ -22,51 +22,47 @@ import java.util.stream.Collectors;
 @Transactional
 public class LoanAllocationServiceImpl implements LoanAllocationService {
 
-    @Autowired
-    private LoanRepository loanRepository;
+    private final LoanRepository loanRepository;
+    private final ModelMapper modelMapper;
+    private final MemberRepository memberRepository;
+    private final BookRepository bookRepository;
+    private final BookCopiesRepository bookCopiesRepository;
 
     @Autowired
-    private ModelMapper modelMapper;
-
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
-    private BookRepository bookRepository;
-
-    @Autowired
-    private BookCopiesRepository bookCopiesRepository;
+    public LoanAllocationServiceImpl(LoanRepository loanRepository, ModelMapper modelMapper,
+                       MemberRepository memberRepository, BookRepository bookRepository,
+                       BookCopiesRepository bookCopiesRepository) {
+        this.loanRepository = loanRepository;
+        this.modelMapper = modelMapper;
+        this.memberRepository = memberRepository;
+        this.bookRepository = bookRepository;
+        this.bookCopiesRepository = bookCopiesRepository;
+    }
 
     @Override
     public LoanDTO issueLoan(LoanDTO loanDTO) {
-        // Check if member exists
         Member member = memberRepository.findById(loanDTO.getMemberId())
                 .orElseThrow(() -> new MemberNotFoundException(loanDTO.getMemberId()));
 
-        // Check if member is suspended
         if (member.getStatus() == Member.MemberStatus.SUSPENDED) {
             throw new UserSuspendedException(loanDTO.getMemberId());
         }
 
-        // Check if book exists
         Book book = bookRepository.findById(loanDTO.getBookId())
-                .orElseThrow(() -> new BookNotFoundException(loanDTO.getBookId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Book", "id", loanDTO.getBookId()));
 
-        // Check if there are available copies
         BookCopies bookCopies = bookCopiesRepository.findByBookId(book.getId())
-                .orElseThrow(() -> new BookNotFoundException(book.getId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Book", "id",book.getId()));
         if (bookCopies.getAvailableCopies() <= 0) {
             throw new BookOutOfStockException(book.getId());
         }
 
-        // Decrease available copies
         bookCopies.setAvailableCopies(bookCopies.getAvailableCopies() - 1);
         bookCopiesRepository.save(bookCopies);
 
         Loan loan = modelMapper.map(loanDTO, Loan.class);
         Loan savedLoan = loanRepository.save(loan);
-        LoanDTO loanResponseDTO = modelMapper.map(savedLoan, LoanDTO.class);
-        return loanResponseDTO;
+        return modelMapper.map(savedLoan, LoanDTO.class);
     }
 
     @Override
@@ -95,7 +91,7 @@ public class LoanAllocationServiceImpl implements LoanAllocationService {
         loan = loanRepository.save(loan);
 
         BookCopies bookCopies = bookCopiesRepository.findByBookId(bookId)
-                .orElseThrow(() -> new BookNotFoundException(bookId));
+                .orElseThrow(() -> new ResourceNotFoundException("Book","id",bookId));
         bookCopies.setAvailableCopies(bookCopies.getAvailableCopies() + 1);
         bookCopiesRepository.save(bookCopies);
 

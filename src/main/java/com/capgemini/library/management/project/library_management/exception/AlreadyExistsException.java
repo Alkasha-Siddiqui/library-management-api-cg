@@ -7,9 +7,10 @@ import lombok.Setter;
 @Setter
 public class AlreadyExistsException extends RuntimeException {
 
-    String resourceName;
-    String fieldName;
-    String fieldValue;
+    private final String resourceName;
+    private final String fieldName;
+    private final String fieldValue;
+
 
     public AlreadyExistsException(String resourceName, String fieldName, String fieldValue) {
         super(String.format("%s already exists with %s : '%s'", resourceName, fieldName, fieldValue));

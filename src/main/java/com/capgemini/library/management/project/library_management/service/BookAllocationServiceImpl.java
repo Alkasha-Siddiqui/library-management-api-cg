@@ -27,17 +27,20 @@ import java.util.stream.Collectors;
 @Transactional
 public class BookAllocationServiceImpl implements BookAllocationService {
 
-    @Autowired
-    private BookRepository bookRepository;
+    private final BookRepository bookRepository;
+    private final GenreRepository genreRepository;
+    private final BookCopiesRepository bookCopiesRepository;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    private GenreRepository genreRepository;
+    public BookAllocationServiceImpl(BookRepository bookRepository, GenreRepository genreRepository,
+                       BookCopiesRepository bookCopiesRepository, ModelMapper modelMapper) {
+        this.bookRepository = bookRepository;
+        this.genreRepository = genreRepository;
+        this.bookCopiesRepository = bookCopiesRepository;
+        this.modelMapper = modelMapper;
+    }
 
-    @Autowired
-    private BookCopiesRepository bookCopiesRepository;
-
-    @Autowired
-    private ModelMapper modelMapper;
 
     @Override
     public BookResponseDTO addBook(BookRequestDTO bookRequestDTO) {
@@ -70,8 +73,7 @@ public class BookAllocationServiceImpl implements BookAllocationService {
     @Override
     public BookResponseDTO getBookById(Long id)  {
         Book book = bookRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Book", "id", id));
-        BookResponseDTO bookResponseDTO = modelMapper.map(book, BookResponseDTO.class);
-        return bookResponseDTO;
+        return modelMapper.map(book, BookResponseDTO.class);
     }
 
     @Override
@@ -86,8 +88,7 @@ public class BookAllocationServiceImpl implements BookAllocationService {
         book.setUpdatedDateTime(OffsetDateTime.now(ZoneOffset.UTC));
 
         Book updatedBook = bookRepository.save(book);
-        BookResponseDTO bookResponseDTO = modelMapper.map(updatedBook, BookResponseDTO.class);
-        return bookResponseDTO;
+        return modelMapper.map(updatedBook, BookResponseDTO.class);
     }
 
     @Override
@@ -104,7 +105,7 @@ public class BookAllocationServiceImpl implements BookAllocationService {
 
         Page<Book>  pageBook = this.bookRepository.findAll(p);
         List<Book> allBooks = pageBook.getContent();
-        List<BookResponseDTO> bookDTOS = allBooks.stream().map((book) -> this.modelMapper.map(book, BookResponseDTO.class)).collect(Collectors.toList());
+        List<BookResponseDTO> bookDTOS = allBooks.stream().map(book -> this.modelMapper.map(book, BookResponseDTO.class)).collect(Collectors.toList());
 
         PageResponseDTO pageResponseDTO = new PageResponseDTO();
 

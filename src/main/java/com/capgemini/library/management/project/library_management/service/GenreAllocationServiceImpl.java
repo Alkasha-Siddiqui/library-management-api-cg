@@ -14,25 +14,26 @@ import java.util.stream.Collectors;
 @Transactional
 public class GenreAllocationServiceImpl implements GenreAllocationService {
 
-    @Autowired
-    private GenreRepository genreRepository;
+    private final GenreRepository genreRepository;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    private ModelMapper modelMapper;
+    public GenreAllocationServiceImpl(GenreRepository genreRepository, ModelMapper modelMapper) {
+        this.genreRepository = genreRepository;
+        this.modelMapper = modelMapper;
+    }
 
     @Override
     public GenreResponseDTO createGenre(GenreRequestDTO genreRequestDTO) {
         Genre genre = modelMapper.map(genreRequestDTO, Genre.class);
         Genre savedGenre = genreRepository.save(genre);
-        GenreResponseDTO genreResponseDTO = modelMapper.map(savedGenre, GenreResponseDTO.class);
-        return genreResponseDTO;
+        return modelMapper.map(savedGenre, GenreResponseDTO.class);
     }
 
     @Override
     public List<GenreResponseDTO> getAllGenres() {
         List<Genre> allGenres = this.genreRepository.findAll();
-        List<GenreResponseDTO> genreResponseDTO = allGenres.stream().map(genre -> modelMapper.map(genre, GenreResponseDTO.class)).collect(Collectors.toList());
-        return genreResponseDTO;
+        return allGenres.stream().map(genre -> modelMapper.map(genre, GenreResponseDTO.class)).collect(Collectors.toList());
     }
 
 }
