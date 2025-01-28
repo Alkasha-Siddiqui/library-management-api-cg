@@ -1,0 +1,202 @@
+{
+	"info": {
+		"_postman_id": "9c7165ea-1331-4036-a77f-93dfae56e230",
+		"name": "Member",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41327532"
+	},
+	"item": [
+		{
+			"name": "http://localhost:5004/api/v1/members",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"firstName\": \"Alkasha\",\r\n  \"lastName\": \"Siddiqui\",\r\n  \"email\": \"a.s@example.com\",\r\n  \"status\":\"ACTIVE\"\r\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5004/api/v1/members",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5004",
+					"path": [
+						"api",
+						"v1",
+						"members"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5004/api/v1/members",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"firstName\": \"Sushmita\",\r\n  \"lastName\": \"jdv\",\r\n  \"email\": \"s.j@example.com\",\r\n  \"status\":\"ACTIVE\"\r\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5004/api/v1/members",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5004",
+					"path": [
+						"api",
+						"v1",
+						"members"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5004/api/v1/members",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"firstName\": \"AYu\",\r\n  \"lastName\": \"XYZ\",\r\n  \"email\": \"a.x@example.com\",\r\n  \"status\":\"EXPIRED\"\r\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5004/api/v1/members",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5004",
+					"path": [
+						"api",
+						"v1",
+						"members"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5004/api/v1/members",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"firstName\": \"Kajal\",\r\n  \"lastName\": \"Singh\",\r\n  \"email\": \"k.s@example.com\",\r\n  \"status\":\"SUSPENDED\"\r\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5004/api/v1/members",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5004",
+					"path": [
+						"api",
+						"v1",
+						"members"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5004/api/v1/members getAllMember",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5004/api/v1/members",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5004",
+					"path": [
+						"api",
+						"v1",
+						"members"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5004/api/v1/members?status=ACTIVE",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5004/api/v1/members?status=ACTIVE",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5004",
+					"path": [
+						"api",
+						"v1",
+						"members"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "ACTIVE"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

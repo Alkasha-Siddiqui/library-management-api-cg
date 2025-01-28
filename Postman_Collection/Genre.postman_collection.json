@@ -1,0 +1,232 @@
+{
+	"info": {
+		"_postman_id": "772aec90-3fe8-4e4e-9132-ff1b17313174",
+		"name": "Genre",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41327532"
+	},
+	"item": [
+		{
+			"name": "http://localhost:5004/api/v1/genres createGenre",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"description\": \"A book for engineering Student\",\r\n    \"name\": \"Programming Book\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5004/api/v1/genres",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5004",
+					"path": [
+						"api",
+						"v1",
+						"genres"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5004/api/v1/genres createGenre",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"description\": \"A comprehensive guide to modern web development\",\r\n    \"name\": \"Web Development Handbook\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5004/api/v1/genres",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5004",
+					"path": [
+						"api",
+						"v1",
+						"genres"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5004/api/v1/genres createGenre",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"description\": \"A comprehensive guide to modern web development\",\r\n    \"name\": \"Web Development Handbook\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5004/api/v1/genres",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5004",
+					"path": [
+						"api",
+						"v1",
+						"genres"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5004/api/v1/genres createGenre",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"description\": \"A comprehensive guide to modern web development\",\r\n    \"name\": \"Web Development Handbook\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5004/api/v1/genres",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5004",
+					"path": [
+						"api",
+						"v1",
+						"genres"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5004/api/v1/genres createGenre",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"description\": \"A comprehensive guide to modern web development\",\r\n    \"name\": \"Web Development Handbook\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5004/api/v1/genres",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5004",
+					"path": [
+						"api",
+						"v1",
+						"genres"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5004/api/v1/genres createGenre",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"description\": \"A comprehensive guide to modern web development\",\r\n    \"name\": \"Web Development Handbook\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5004/api/v1/genres",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5004",
+					"path": [
+						"api",
+						"v1",
+						"genres"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5004/api/v1/genres getAllGenres",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5004/api/v1/genres",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5004",
+					"path": [
+						"api",
+						"v1",
+						"genres"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
