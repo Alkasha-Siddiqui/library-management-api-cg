@@ -1,0 +1,257 @@
+{
+	"info": {
+		"_postman_id": "9bc2755e-8e2c-4a44-800e-30e73253c103",
+		"name": "Loan",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41327532"
+	},
+	"item": [
+		{
+			"name": "http://localhost:5004/api/v1/loans",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"memberId\": 3,\r\n  \"bookId\": 1,\r\n  \"issueDate\": \"2023-01-22\",\r\n  \"dueDate\": \"2023-02-05\",\r\n  \"status\": \"ISSUED\" \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5004/api/v1/loans",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5004",
+					"path": [
+						"api",
+						"v1",
+						"loans"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5004/api/v1/loans",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"memberId\": 2,\r\n  \"bookId\": 4,\r\n  \"issueDate\": \"2023-01-22\",\r\n  \"dueDate\": \"2023-02-05\",\r\n  \"status\": \"RETURNED\" \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5004/api/v1/loans",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5004",
+					"path": [
+						"api",
+						"v1",
+						"loans"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5004/api/v1/loans",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"memberId\": 3,\r\n    \"bookId\": 2,\r\n    \"issueDate\": \"2023-03-15\",\r\n    \"dueDate\": \"2023-03-29\",\r\n    \"status\": \"ISSUED\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5004/api/v1/loans",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5004",
+					"path": [
+						"api",
+						"v1",
+						"loans"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5004/api/v1/loans",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"memberId\": 4,\r\n    \"bookId\": 3,\r\n    \"issueDate\": \"2023-03-15\",\r\n    \"dueDate\": \"2023-03-29\",\r\n    \"status\": \"OVERDUE\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5004/api/v1/loans",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5004",
+					"path": [
+						"api",
+						"v1",
+						"loans"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5004/api/v1/loans getAllLoans",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5004/api/v1/loans",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5004",
+					"path": [
+						"api",
+						"v1",
+						"loans"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5004/api/v1/loans getAllLoans with status",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5004/api/v1/loans?status=OVERDUE",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5004",
+					"path": [
+						"api",
+						"v1",
+						"loans"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "ISSUED",
+							"disabled": true
+						},
+						{
+							"key": "status",
+							"value": "RETURNED",
+							"disabled": true
+						},
+						{
+							"key": "status",
+							"value": "OVERDUE"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5004/api/v1/loans/3/return returnBook",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5004/api/v1/loans/3/return",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5004",
+					"path": [
+						"api",
+						"v1",
+						"loans",
+						"3",
+						"return"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5004/api/v1/loans/overdue getOverdueLoans",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5004/api/v1/loans/overdue",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5004",
+					"path": [
+						"api",
+						"v1",
+						"loans",
+						"overdue"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
